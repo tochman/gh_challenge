@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>GH Users</title>
+</head>
+
+<body>
+  <style media="screen">
+    .avatar {
+      width: 100px;
+      height: auto;
+    }
+  </style>
+  <section id="users">
+  </section>
+
+  <script type="text/javascript">
+    const fetchAndDisplayUsers = () => {
+      fetch('https://api.github.com/users?since=1')
+        .then((response) => {
+          response.json().then((users) => {
+            appendUsersToSection(users);
+            document.querySelector('.spinner').style.display = 'none';
+          });
+        })
+    }
+
+    const appendUsersToSection = users => {
+      const element = document.getElementById('users');
+      users.forEach((user) => {
+        let div = document.createElement('div');
+        let html = formatUserDiv(user);
+        div.innerHTML = html;
+        element.appendChild(div);
+      })
+      return;
+    }
+
+    const formatUserDiv = (user) => {
+      let html = `<h2> <a href="${user.html_url}">${user.login}</a></h2>`;
+      html += `<img class="avatar" src="${user.avatar_url}">`;
+      return html;
+    }
+
+    const addSpinner = () => {
+      let spinner = document.createElement('section')
+      spinner.innerHTML = `
+      <section class="spinner">
+          <img src="https://flooringandbeds.co.uk/wp-content/themes/flooring-bed/images/loader.gif" />
+      </section>`
+      document.body.appendChild(spinner);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      addSpinner();
+      fetchAndDisplayUsers();
+    }) // javascript
+  </script>
+</body>
+
+</html>
